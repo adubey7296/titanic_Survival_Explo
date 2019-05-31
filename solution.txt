@@ -1,0 +1,51 @@
+Q.1) Find the average fare of each class.
+	
+	Titanic = LOAD '/path/titanic.txt' USING PigStorage('\t') as (pid:int,surv:int,pclass:int,name:chararray,sex:chararray,age:int,sibsp:int,parch:int,tkt:chararray,fare:float,cabin:chararray,embarked:chararray);
+				
+					//use ('\t') for tab separated values and (',') for comma separated values//
+
+	B = GROUP Titanic by pclass;
+
+	C = FOREACH B generate GROUP, AVG(Titanic_all.fare);
+	
+	dump C;
+
+
+Q.2) Find no. of people alive in each class and are embarked in Southampton.
+
+	Titanic = LOAD ------------(); //same as above//
+
+`	B = FILTER Titanic by embarked matches 'S';
+
+	C = FILTER B survived==0;
+
+	D = GROUP C by pclass;
+
+	E = FOREACH D generate GROUP, COUNT(C.survived);
+
+	dump E;
+
+
+Q.3) Find the no. of male and female died.
+
+	Titanic = LOAD ----------(); //same as above//
+
+	B = FILTER Titanic by survived==1;
+
+	C = FILTER B by sex=='male';
+
+	D = GROUP C by all;
+
+	E = FOREACH D generate COUNT(C);
+
+	dump E;
+
+
+	C1 = FILTER B by sex=='female';
+
+	D1 = GROUP C1 all;
+
+	E1 = FOREACH D1 generates COUNT(C1);
+
+	dump E1;
+
